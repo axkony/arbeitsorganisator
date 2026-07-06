@@ -98,6 +98,12 @@ pub fn run() {
             sql: include_str!("../../src/db/migrations/0004_sudden_wrecking_crew.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 6,
+            description: "finances_general",
+            sql: include_str!("../../src/db/migrations/0005_free_scarlet_spider.sql"),
+            kind: MigrationKind::Up,
+        },
     ];
 
     tauri::Builder::default()

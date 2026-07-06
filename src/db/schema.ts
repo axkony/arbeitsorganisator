@@ -7,6 +7,7 @@ import {
   index,
   uniqueIndex,
   check,
+  primaryKey,
   type AnySQLiteColumn,
 } from "drizzle-orm/sqlite-core";
 
@@ -289,6 +290,77 @@ export const todoFields = sqliteTable(
   (t) => [uniqueIndex("idx_todo_fields_lookup").on(t.todoId, t.fieldKey)],
 );
 
+// ==================================================== FINANCES GENERAL
+export const fgPersons = sqliteTable(
+  "fg_persons",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    name: text("name").notNull(),
+    notes: text("notes"),
+    ...timestamps(),
+    ...softDelete(),
+  },
+  (t) => [index("idx_fg_persons_name").on(t.name)],
+);
+
+export const fgTags = sqliteTable(
+  "fg_tags",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    name: text("name").notNull(),
+    color: text("color"), // optional hex for the UI chip
+    ...timestamps(),
+    ...softDelete(),
+  },
+  // Unique among live tags only — lets you reuse a name after soft-deleting one.
+  (t) => [
+    uniqueIndex("idx_fg_tags_name")
+      .on(t.name)
+      .where(sql`${t.deletedAt} IS NULL`),
+  ],
+);
+
+export const fgTransactions = sqliteTable(
+  "fg_transactions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    direction: text("direction", { enum: ["income", "expense"] }).notNull(),
+    description: text("description").notNull(),
+    amountRappen: integer("amount_rappen").notNull(), // Rappen, like invoices
+    recurrence: text("recurrence", { enum: ["once", "monthly", "yearly"] })
+      .notNull()
+      .default("once"),
+    startDate: text("start_date").notNull(), // ISO date; the date, or first occurrence
+    endDate: text("end_date"), // recurring only; NULL = ongoing
+    personId: integer("person_id").references(() => fgPersons.id),
+    notes: text("notes"),
+    ...timestamps(),
+    ...softDelete(),
+  },
+  (t) => [
+    index("idx_fg_transactions_direction").on(t.direction),
+    index("idx_fg_transactions_start_date").on(t.startDate),
+    index("idx_fg_transactions_person_id").on(t.personId),
+  ],
+);
+
+// Junction: multiple tags per transaction.
+export const fgTransactionTags = sqliteTable(
+  "fg_transaction_tags",
+  {
+    transactionId: integer("transaction_id")
+      .notNull()
+      .references(() => fgTransactions.id),
+    tagId: integer("tag_id")
+      .notNull()
+      .references(() => fgTags.id),
+  },
+  (t) => [
+    primaryKey({ columns: [t.transactionId, t.tagId] }),
+    index("idx_fg_transaction_tags_tag_id").on(t.tagId),
+  ],
+);
+
 // ============================================================ RELATIONS
 // Enable db.query.* relational lookups (e.g. patient with all sessions).
 export const patientsRelations = relations(patients, ({ many }) => ({
@@ -404,3 +476,36 @@ export const todosRelations = relations(todos, ({ one, many }) => ({
 export const todoFieldsRelations = relations(todoFields, ({ one }) => ({
   todo: one(todos, { fields: [todoFields.todoId], references: [todos.id] }),
 }));
+
+export const fgPersonsRelations = relations(fgPersons, ({ many }) => ({
+  transactions: many(fgTransactions),
+}));
+
+export const fgTagsRelations = relations(fgTags, ({ many }) => ({
+  transactionTags: many(fgTransactionTags),
+}));
+
+export const fgTransactionsRelations = relations(
+  fgTransactions,
+  ({ one, many }) => ({
+    person: one(fgPersons, {
+      fields: [fgTransactions.personId],
+      references: [fgPersons.id],
+    }),
+    transactionTags: many(fgTransactionTags),
+  }),
+);
+
+export const fgTransactionTagsRelations = relations(
+  fgTransactionTags,
+  ({ one }) => ({
+    transaction: one(fgTransactions, {
+      fields: [fgTransactionTags.transactionId],
+      references: [fgTransactions.id],
+    }),
+    tag: one(fgTags, {
+      fields: [fgTransactionTags.tagId],
+      references: [fgTags.id],
+    }),
+  }),
+);
