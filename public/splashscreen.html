@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: transparent; /* transparent window, see step 2 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      .logo {
+        width: 240px;
+        height: 240px;
+        opacity: 1;
+        animation:
+          appear 1000ms ease-out forwards,
+          pulse 1600ms ease-in-out 1000ms infinite;
+      }
+      @keyframes appear {
+        from {
+          opacity: 1;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.06);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <img
+      class="logo"
+      src="/public/Arbeitsorganisator_splashscreen.png"
+      alt=""
+    />
+  </body>
+</html>

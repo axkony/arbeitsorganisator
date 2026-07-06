@@ -55,6 +55,16 @@ fn prune(dir: &PathBuf) {
     }
 }
 
+#[tauri::command]
+fn close_splashscreen(window: tauri::Window) {
+    if let Some(splash) = window.get_webview_window("splashscreen") {
+        let _ = splash.close();
+    }
+    if let Some(main) = window.get_webview_window("main") {
+        let _ = main.show();
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let migrations = vec![
@@ -183,7 +193,11 @@ pub fn run() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![greet, prepare_backup_path])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            prepare_backup_path,
+            close_splashscreen
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
