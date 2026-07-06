@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1781102471342,
+      "tag": "0000_tense_mister_fear",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1781606754105,
+      "tag": "0001_brown_karma",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1783248506510,
+      "tag": "0002_mature_vindicator",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1783252242270,
+      "tag": "0003_wooden_lucky_pierre",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1783254922646,
+      "tag": "0004_sudden_wrecking_crew",
+      "breakpoints": true
+    }
+  ]
+}

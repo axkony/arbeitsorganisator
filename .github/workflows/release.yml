@@ -1,0 +1,47 @@
+name: Release
+
+# Publish a new version by pushing a tag, e.g.:
+#   git tag v0.3.0 && git push --tags
+# This builds + signs the app, creates the GitHub release, uploads the .dmg and
+# updater artifacts, and generates latest.json — all automatically.
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: macos-latest # Apple Silicon runner → native aarch64 build
+    permissions:
+      contents: write # allow tauri-action to create the release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - run: pnpm install
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # These two come from repo Settings → Secrets and variables → Actions:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "Arbeitsorganisator ${{ github.ref_name }}"
+          releaseBody: "Neue Version — beim nächsten Start installiert sie sich selbst."
+          releaseDraft: false
+          prerelease: false
+          args: --target aarch64-apple-darwin
