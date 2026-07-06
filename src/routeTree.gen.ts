@@ -14,10 +14,12 @@ import { Route as TodosIndexRouteImport } from './routes/todos.index'
 import { Route as SettingsIndexRouteImport } from './routes/settings.index'
 import { Route as SessionsIndexRouteImport } from './routes/sessions.index'
 import { Route as PatientsIndexRouteImport } from './routes/patients.index'
+import { Route as FinancesGeneralIndexRouteImport } from './routes/financesGeneral.index'
 import { Route as FinancesIndexRouteImport } from './routes/finances.index'
 import { Route as TodosTodoIdRouteImport } from './routes/todos.$todoId'
 import { Route as SessionsSessionIdRouteImport } from './routes/sessions.$sessionId'
 import { Route as PatientsPatientIdRouteImport } from './routes/patients.$patientId'
+import { Route as FinancesGeneralIdRouteImport } from './routes/financesGeneral.$id'
 import { Route as FinancesInvoiceIdRouteImport } from './routes/finances.$invoiceId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -45,6 +47,11 @@ const PatientsIndexRoute = PatientsIndexRouteImport.update({
   path: '/patients/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FinancesGeneralIndexRoute = FinancesGeneralIndexRouteImport.update({
+  id: '/financesGeneral/',
+  path: '/financesGeneral/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FinancesIndexRoute = FinancesIndexRouteImport.update({
   id: '/finances/',
   path: '/finances/',
@@ -65,6 +72,11 @@ const PatientsPatientIdRoute = PatientsPatientIdRouteImport.update({
   path: '/patients/$patientId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FinancesGeneralIdRoute = FinancesGeneralIdRouteImport.update({
+  id: '/financesGeneral/$id',
+  path: '/financesGeneral/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FinancesInvoiceIdRoute = FinancesInvoiceIdRouteImport.update({
   id: '/finances/$invoiceId',
   path: '/finances/$invoiceId',
@@ -74,10 +86,12 @@ const FinancesInvoiceIdRoute = FinancesInvoiceIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/finances/$invoiceId': typeof FinancesInvoiceIdRoute
+  '/financesGeneral/$id': typeof FinancesGeneralIdRoute
   '/patients/$patientId': typeof PatientsPatientIdRoute
   '/sessions/$sessionId': typeof SessionsSessionIdRoute
   '/todos/$todoId': typeof TodosTodoIdRoute
   '/finances/': typeof FinancesIndexRoute
+  '/financesGeneral/': typeof FinancesGeneralIndexRoute
   '/patients/': typeof PatientsIndexRoute
   '/sessions/': typeof SessionsIndexRoute
   '/settings/': typeof SettingsIndexRoute
@@ -86,10 +100,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/finances/$invoiceId': typeof FinancesInvoiceIdRoute
+  '/financesGeneral/$id': typeof FinancesGeneralIdRoute
   '/patients/$patientId': typeof PatientsPatientIdRoute
   '/sessions/$sessionId': typeof SessionsSessionIdRoute
   '/todos/$todoId': typeof TodosTodoIdRoute
   '/finances': typeof FinancesIndexRoute
+  '/financesGeneral': typeof FinancesGeneralIndexRoute
   '/patients': typeof PatientsIndexRoute
   '/sessions': typeof SessionsIndexRoute
   '/settings': typeof SettingsIndexRoute
@@ -99,10 +115,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/finances/$invoiceId': typeof FinancesInvoiceIdRoute
+  '/financesGeneral/$id': typeof FinancesGeneralIdRoute
   '/patients/$patientId': typeof PatientsPatientIdRoute
   '/sessions/$sessionId': typeof SessionsSessionIdRoute
   '/todos/$todoId': typeof TodosTodoIdRoute
   '/finances/': typeof FinancesIndexRoute
+  '/financesGeneral/': typeof FinancesGeneralIndexRoute
   '/patients/': typeof PatientsIndexRoute
   '/sessions/': typeof SessionsIndexRoute
   '/settings/': typeof SettingsIndexRoute
@@ -113,10 +131,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/finances/$invoiceId'
+    | '/financesGeneral/$id'
     | '/patients/$patientId'
     | '/sessions/$sessionId'
     | '/todos/$todoId'
     | '/finances/'
+    | '/financesGeneral/'
     | '/patients/'
     | '/sessions/'
     | '/settings/'
@@ -125,10 +145,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/finances/$invoiceId'
+    | '/financesGeneral/$id'
     | '/patients/$patientId'
     | '/sessions/$sessionId'
     | '/todos/$todoId'
     | '/finances'
+    | '/financesGeneral'
     | '/patients'
     | '/sessions'
     | '/settings'
@@ -137,10 +159,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/finances/$invoiceId'
+    | '/financesGeneral/$id'
     | '/patients/$patientId'
     | '/sessions/$sessionId'
     | '/todos/$todoId'
     | '/finances/'
+    | '/financesGeneral/'
     | '/patients/'
     | '/sessions/'
     | '/settings/'
@@ -150,10 +174,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FinancesInvoiceIdRoute: typeof FinancesInvoiceIdRoute
+  FinancesGeneralIdRoute: typeof FinancesGeneralIdRoute
   PatientsPatientIdRoute: typeof PatientsPatientIdRoute
   SessionsSessionIdRoute: typeof SessionsSessionIdRoute
   TodosTodoIdRoute: typeof TodosTodoIdRoute
   FinancesIndexRoute: typeof FinancesIndexRoute
+  FinancesGeneralIndexRoute: typeof FinancesGeneralIndexRoute
   PatientsIndexRoute: typeof PatientsIndexRoute
   SessionsIndexRoute: typeof SessionsIndexRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
@@ -197,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PatientsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/financesGeneral/': {
+      id: '/financesGeneral/'
+      path: '/financesGeneral'
+      fullPath: '/financesGeneral/'
+      preLoaderRoute: typeof FinancesGeneralIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/finances/': {
       id: '/finances/'
       path: '/finances'
@@ -225,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PatientsPatientIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/financesGeneral/$id': {
+      id: '/financesGeneral/$id'
+      path: '/financesGeneral/$id'
+      fullPath: '/financesGeneral/$id'
+      preLoaderRoute: typeof FinancesGeneralIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/finances/$invoiceId': {
       id: '/finances/$invoiceId'
       path: '/finances/$invoiceId'
@@ -238,10 +278,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FinancesInvoiceIdRoute: FinancesInvoiceIdRoute,
+  FinancesGeneralIdRoute: FinancesGeneralIdRoute,
   PatientsPatientIdRoute: PatientsPatientIdRoute,
   SessionsSessionIdRoute: SessionsSessionIdRoute,
   TodosTodoIdRoute: TodosTodoIdRoute,
   FinancesIndexRoute: FinancesIndexRoute,
+  FinancesGeneralIndexRoute: FinancesGeneralIndexRoute,
   PatientsIndexRoute: PatientsIndexRoute,
   SessionsIndexRoute: SessionsIndexRoute,
   SettingsIndexRoute: SettingsIndexRoute,

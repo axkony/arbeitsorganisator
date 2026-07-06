@@ -6,6 +6,7 @@ import {
   Receipt,
   ListChecks,
   GearIcon,
+  PiggyBankIcon
 } from "@phosphor-icons/react";
 
 import {
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { title: "Patienten", to: "/patients", icon: Users },
   { title: "Sitzungen", to: "/sessions", icon: Stethoscope },
   { title: "Finanzen", to: "/finances", icon: Receipt },
+  { title: "Finanzen Gesamt", to: "/financesGeneral", icon: PiggyBankIcon },
   { title: "Todos", to: "/todos", icon: ListChecks },
 ] as const;
 
