@@ -6,7 +6,8 @@ import {
   Receipt,
   ListChecks,
   GearIcon,
-  PiggyBankIcon
+  PiggyBankIcon,
+  UploadSimpleIcon,
 } from "@phosphor-icons/react";
 
 import {
@@ -28,6 +29,8 @@ const NAV_ITEMS = [
   { title: "Finanzen", to: "/finances", icon: Receipt },
   { title: "Finanzen Gesamt", to: "/financesGeneral", icon: PiggyBankIcon },
   { title: "Todos", to: "/todos", icon: ListChecks },
+  // TEMPORARY: one-time patient CSV import — remove after use.
+  { title: "Import", to: "/import", icon: UploadSimpleIcon },
 ] as const;
 
 function AppSidebar() {

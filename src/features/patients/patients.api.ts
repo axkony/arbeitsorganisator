@@ -63,6 +63,40 @@ export async function updatePatient(id: number, values: PatientFormValues) {
   return row;
 }
 
+// One-time bulk import (CSV). Skips anyone already present by
+// firstName|lastName|dateOfBirth so re-running never double-inserts.
+// Returns how many were actually inserted vs. skipped as already-present.
+export async function bulkCreatePatients(values: PatientFormValues[]) {
+  if (values.length === 0) return { inserted: 0, skippedExisting: 0 };
+
+  const existing = await db
+    .select({
+      firstName: patients.firstName,
+      lastName: patients.lastName,
+      dateOfBirth: patients.dateOfBirth,
+    })
+    .from(patients)
+    .where(isNull(patients.deletedAt));
+
+  const key = (p: {
+    firstName: string;
+    lastName: string;
+    dateOfBirth?: string | null;
+  }) =>
+    `${p.lastName.trim().toLowerCase()}|${p.firstName.trim().toLowerCase()}|${p.dateOfBirth ?? ""}`;
+
+  const present = new Set(existing.map(key));
+  const fresh = values.filter((v) => !present.has(key(v)));
+  const skippedExisting = values.length - fresh.length;
+
+  const rows = fresh.map(toRow);
+  const CHUNK = 100;
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    await db.insert(patients).values(rows.slice(i, i + CHUNK));
+  }
+  return { inserted: rows.length, skippedExisting };
+}
+
 export async function softDeletePatient(id: number) {
   await db
     .update(patients)
